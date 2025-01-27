@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+*{
+    font-family:'Poppins','Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', 'Verdana', 'sans-serif';
+}
+@theme{
+    --color-akash-100:oklch(54.44% 0.1373 269.29);
+    --color-akash-200:#835399;
+    --color-akash-300:#965399;
+    --color-akash-400:#985399;
+}
