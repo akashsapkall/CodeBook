@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 import img1 from "../assets/images/books.jpg";
 export const ProductCard = ({ product }) => {
+  // const product={
+  //   best_seller:"ak", poster:"ak", name:"ak", overview:"ak", rating:"ak", price:"ak",
+  // }
   const { best_seller, poster, name, overview, rating, price }=product;
   return (
     <div className="m-3 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
@@ -26,8 +29,8 @@ export const ProductCard = ({ product }) => {
             {rating>0 &&
                 (()=>{
                     const filledArr=[];
-                    for (let i = 0; i < product.rating; i++) {
-                        filledArr[i]=(<i className="text-lg bi bi-star-fill text-yellow-500 mr-1"></i>)
+                    for (let j = 0; j < product.rating; j++) {
+                        filledArr[j]=(<i key={j} className="text-lg bi bi-star-fill text-yellow-500 mr-1"></i>)
                     }
                     return filledArr;
                 })()
@@ -35,8 +38,8 @@ export const ProductCard = ({ product }) => {
             {rating!=5 &&
                 (()=>{
                     const filledArr=[];
-                    for (let i = 0; i < 5-product.rating; i++) {
-                        filledArr[i]=(<i className="text-lg bi bi-star text-yellow-500 mr-1"></i>)
+                    for (let j = 0; j < 5-product.rating; j++) {
+                        filledArr[j]=(<i key={j} className="text-lg bi bi-star text-yellow-500 mr-1"></i>)
                     }
                     return filledArr;
                 })()
