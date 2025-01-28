@@ -4,10 +4,8 @@ import { ProductCard } from "../../components/ProductCard";
 import { FilterBar } from "./components/FilterBar";
 export const ProductList = () => {
   const [filterBar, setFilterBar] = useState(false);
-  // const [ fetchData, setFetchData ]=useState({});
-  const url= "http://localhost:8000/products";
+  const url = "http://localhost:8000/products";
   const { data: productlist, loading, error } = useFetch(url);
-  console.log(productlist);
   if (loading) {
     return (
       <main>
@@ -65,8 +63,7 @@ export const ProductList = () => {
           />
         )}
         <div className="flex flex-wrap justify-center lg:flex-row">
-          {productlist &&
-            productlist.map((product) => (
+        {productlist && productlist.map((product)=>(
               <ProductCard key={product.id} product={product}/>
             ))}
         </div>
