@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export const Qans = ({ qa }) => {
+const Qans = ({ qa }) => {
   const [showAns, setShowAns] = useState(false);
   return (
       <div>
@@ -63,3 +63,5 @@ export const Qans = ({ qa }) => {
       </div>
   );
 };
+export default Qans;
+
