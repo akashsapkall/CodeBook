@@ -1,5 +1,5 @@
-import { Qans } from "./Qans";
-export const Faq = () => {
+import Qans from "./Qans";
+const Faq = () => {
   const faqs = [
     {
       id: 1,
@@ -46,3 +46,5 @@ export const Faq = () => {
     </section>
   );
 };
+
+export default Faq;
