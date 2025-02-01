@@ -1,14 +1,28 @@
-import { Hero } from "./components/Hero";
-import { FeaturedProducts } from "./components/FeaturedProducts";
-import { Testimonials } from "./components/Testimonials"
-import { Faq } from "./components/Faq";
+import { lazy, Suspense } from "react";
+
+const Hero = lazy(() => import("./components/Hero"));
+const FeaturedProducts = lazy(() => import("./components/FeaturedProducts"));
+const Testimonials = lazy(() => import("./components/Testimonials"));
+const Faq = lazy(() => import("./components/Faq"));
+// const Quans = lazy(() => import("./components/Quans"));
+
+const LoadingFallback = () => <p>Loading...</p>;
+
 export const HomePage = () => {
   return (
     <>
-      <Hero />
-      <FeaturedProducts />
-      <Testimonials />
-      <Faq />
+      <Suspense fallback={<LoadingFallback />}>
+        <Hero />
+      {/* </Suspense> */}
+      {/* <Suspense fallback={<LoadingFallback />}> */}
+        <FeaturedProducts />
+      {/* </Suspense> */}
+      {/* <Suspense fallback={<LoadingFallback />}> */}
+        <Testimonials />
+      {/* </Suspense> */}
+      {/* <Suspense fallback={<LoadingFallback />}> */}
+        <Faq />
+      </Suspense>
     </>
   );
 };
