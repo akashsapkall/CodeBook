@@ -1,7 +1,7 @@
 import { useFetch } from "../../../hooks/useFetch";
 import { ProductCard } from "../../../components/ProductCard";
 
-export const FeaturedProducts = () => {
+const FeaturedProducts = () => {
   const { data:productlist, loading, error }=useFetch("http://localhost:8000/featured_products");
     return (
       <section className="my-20">
@@ -14,3 +14,4 @@ export const FeaturedProducts = () => {
       </section>
     )
   }
+export default FeaturedProducts;
