@@ -1,9 +1,13 @@
 // import { useNavigate } from"react-router-dom";
 // import { useFetch } from "../../../hooks/useFetch";
 // import { useEffect } from "react";
-
+import { useDispatch, useSelector } from "react-redux";
+import { isBestSellerOnly, inStockOnly, priceSort, ratingSort, clearAll } from "../../../store/FilterSlice";
 export const FilterBar = ({ makeFilterBarClose }) => {
-  // const navigate=useNavigate();
+  const dispatch =useDispatch();
+  // const inStock=useSelector((state)=>state.filter.inStock);
+  // const bestSeller=useSelector((state)=>state.filter.bestSeller);
+  const state=useSelector((state)=>state.filter);
   return (
     <section className="filter">
       <div
@@ -54,6 +58,8 @@ export const FilterBar = ({ makeFilterBarClose }) => {
                   value=""
                   name="price-sort"
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600"
+                  onChange={()=>dispatch(priceSort("lowtohigh"))}
+                  checked={state.sortbyPrice==="lowtohigh"}
                 />
                 <label
                   htmlFor="price-sort-1"
@@ -69,6 +75,8 @@ export const FilterBar = ({ makeFilterBarClose }) => {
                   value=""
                   name="price-sort"
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600"
+                  onChange={()=>dispatch(priceSort("hightolow"))}
+                  checked={state.sortbyPrice==="hightolow"}
                 />
                 <label
                   htmlFor="price-sort-2"
@@ -87,6 +95,8 @@ export const FilterBar = ({ makeFilterBarClose }) => {
                   value=""
                   name="rating-sort"
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600"
+                  onChange={()=>dispatch(ratingSort("FourAndAbove"))}
+                  checked={state.sortByRating==="FourAndAbove"}
                 />
                 <label
                   htmlFor="rating-sort-1"
@@ -102,6 +112,8 @@ export const FilterBar = ({ makeFilterBarClose }) => {
                   value=""
                   name="rating-sort"
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600"
+                  onChange={()=>dispatch(ratingSort("ThreeAndAbove"))}
+                  checked={state.sortByRating==="ThreeAndAbove"}
                 />
                 <label
                   htmlFor="rating-sort-2"
@@ -117,6 +129,8 @@ export const FilterBar = ({ makeFilterBarClose }) => {
                   value=""
                   name="rating-sort"
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600"
+                  onChange={()=>dispatch(ratingSort("TwoAndAbove"))}
+                  checked={state.sortByRating==="TwoAndAbove"}
                 />
                 <label
                   htmlFor="rating-sort-3"
@@ -132,6 +146,8 @@ export const FilterBar = ({ makeFilterBarClose }) => {
                   value=""
                   name="rating-sort"
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600"
+                  onChange={()=>dispatch(ratingSort("OneAndAbove"))}
+                  checked={state.sortByRating==="OneAndAbove"}
                 />
                 <label
                   htmlFor="rating-sort-4"
@@ -149,6 +165,8 @@ export const FilterBar = ({ makeFilterBarClose }) => {
                   type="checkbox"
                   value=""
                   className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600"
+                  onChange={()=>dispatch(isBestSellerOnly(!state.bestSeller))}
+                  checked={state.bestSeller||false}
                 />
                 <label
                   htmlFor="best-seller"
@@ -163,6 +181,8 @@ export const FilterBar = ({ makeFilterBarClose }) => {
                   type="checkbox"
                   value=""
                   className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600"
+                  onChange={()=>dispatch(inStockOnly(!state.inStock))}
+                  checked={state.inStock||false}
                 />
                 <label
                   htmlFor="only-instock"
@@ -176,6 +196,7 @@ export const FilterBar = ({ makeFilterBarClose }) => {
               <button
                 type="button"
                 className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-10 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                onClick={()=>dispatch(clearAll())}
               >
                 Clear Filter
               </button>
