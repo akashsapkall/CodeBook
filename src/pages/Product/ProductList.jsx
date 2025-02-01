@@ -1,11 +1,25 @@
-import { useState } from "react";
+import { useDebugValue, useState } from "react";
 import { useFetch } from "../../hooks/useFetch";
-import { ProductCard } from "../../components/ProductCard";
+import { ProductCard } from "../../components";
 import { FilterBar } from "./components/FilterBar";
+import { useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
+import { useSearch } from "./components/useSearch";
 export const ProductList = () => {
   const [filterBar, setFilterBar] = useState(false);
-  const url = "http://localhost:8000/products";
-  const { data: productlist, loading, error } = useFetch(url);
+  
+  let url=useSelector((state)=>state.filter.url);
+  console.log(url);
+  const [ searchparam ]=useSearchParams();
+  const query=searchparam.get("q") || "";
+  console.log(query);
+  if(query){
+    useSearch(query); 
+  }
+  console.log(url);
+  // const url = "http://localhost:8000/products&in_sto=tru";
+  const { data:productlist, loading, error } = useFetch(url);
+
   if (loading) {
     return (
       <main>
@@ -33,7 +47,7 @@ export const ProductList = () => {
       <section className="mb-5">
         <div className="w-[90vw] mx-auto py-5 flex justify-between">
           <span className="text-2xl font-semibold dark:text-slate-100 mb-5">
-            All eBooks (15)
+            All eBooks [{productlist.length}]
           </span>
           <span>
             <button
@@ -63,8 +77,9 @@ export const ProductList = () => {
           />
         )}
         <div className="flex flex-wrap justify-center lg:flex-row">
-        {productlist && productlist.map((product)=>(
-              <ProductCard key={product.id} product={product}/>
+          {productlist &&
+            productlist.map((product) => (
+              <ProductCard key={product.id} product={product} />
             ))}
         </div>
       </section>
