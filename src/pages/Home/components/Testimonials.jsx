@@ -1,4 +1,4 @@
-export const Testimonials = () => {
+const Testimonials = () => {
     return (
       <section className='w-[90vw] mx-auto my-20'>
           <h1 className="text-2xl text-center font-semibold dark:text-slate-100 mb-5 underline underline-offset-8">Student About CodeBook</h1>    
@@ -59,3 +59,4 @@ export const Testimonials = () => {
       </section>
     )
   }
+export default Testimonials;
