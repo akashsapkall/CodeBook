@@ -9,3 +9,6 @@
     --color-akash-300:#965399;
     --color-akash-400:#985399;
 }
+main{
+    min-height: 80vh;
+}
