@@ -1,12 +1,22 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { Search } from "./Search";
 import logo from "../assets/images/4.png";
+import { ProfileLogin } from "./Profile/ProfileLogin";
+import { ProfileLogOut } from "./Profile/ProfileLogOut";
 export const Header = () => {
+  const cartList=useSelector((state)=>state.cart.cartList);
+  const { pathname } = useLocation();
   const [darkMode, setDarkMode] = useState(
     JSON.parse(localStorage.getItem("codebook_darkmode")) || false
   );
   const [searchPanel, setSearchPanel] = useState(false);
+  const token=JSON.parse(sessionStorage.getItem("token"));
+  const [profile, setProfile] = useState(false);
+  useEffect(() => {
+    setSearchPanel(false);
+  }, [pathname]);
   useEffect(() => {
     localStorage.setItem("codebook_darkmode", JSON.stringify(darkMode));
     if (darkMode) {
@@ -24,7 +34,7 @@ export const Header = () => {
             : "bg-white border-b border-gray-300 dark:bg-gray-900 dark:border-none"
         }
       >
-        <div className="w-[90vw] flex flex-wrap justify-between items-center mx-auto py-4">
+        <div className="w-[90vw] flex flex-wrap justify-between items-center mx-auto py-4 relative">
           <Link
             to="/"
             className="flex items-center space-x-3 rtl:space-x-reverse"
@@ -34,7 +44,7 @@ export const Header = () => {
               CodeBook
             </span>
           </Link>
-          <div className="flex items-center space-x-6 rtl:space-x-reverse">
+          <div className="w-[150px] flex justify-between items-center">
             <span
               className="cursor-pointer text-xl text-gray-700 dark:text-white "
               onClick={() => setDarkMode(!darkMode)}
@@ -51,17 +61,23 @@ export const Header = () => {
             >
               <i className="bi bi-search"></i>
             </span>
-            <Link to="/">
+            <Link to="/cart">
               <span className="cursor-pointer text-xl  text-gray-700 dark:text-white">
                 <span className="text-sm rounded-lg bg-green-600 px-1 absolute ml-2">
-                  5
+                  {cartList.length}
                 </span>
                 <i className="bi bi-cart"></i>
               </span>
             </Link>
-            <span className="cursor-pointer text-xl  text-gray-700 dark:text-white">
+            <span
+              className="cursor-pointer text-xl  text-gray-700 dark:text-white"
+              onClick={() => setProfile(!profile)}
+            >
               <i className="bi bi-person-circle"></i>
             </span>
+            {profile && (
+              token?<ProfileLogin setProfile={setProfile} />:<ProfileLogOut setProfile={setProfile} />
+            )}
           </div>
         </div>
       </nav>
