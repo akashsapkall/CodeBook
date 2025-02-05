@@ -1,23 +1,15 @@
-import { useDebugValue, useState } from "react";
+import { useState } from "react";
 import { useFetch } from "../../hooks/useFetch";
 import { ProductCard } from "../../components";
 import { FilterBar } from "./components/FilterBar";
 import { useSelector } from "react-redux";
-import { useSearchParams } from "react-router-dom";
-import { useSearch } from "./components/useSearch";
+// import { useSearchParams } from "react-router-dom";
+// import { useSearch } from "./components/useSearch";
 export const ProductList = () => {
   const [filterBar, setFilterBar] = useState(false);
   
   let url=useSelector((state)=>state.filter.url);
-  console.log(url);
-  const [ searchparam ]=useSearchParams();
-  const query=searchparam.get("q") || "";
-  console.log(query);
-  if(query){
-    useSearch(query); 
-  }
-  console.log(url);
-  // const url = "http://localhost:8000/products&in_sto=tru";
+
   const { data:productlist, loading, error } = useFetch(url);
 
   if (loading) {
