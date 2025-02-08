@@ -1,6 +1,14 @@
+// import { response } from "express";
 import { useState, useEffect } from "react";
+import { useSelector, useDispatch} from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { clearCart } from "../../../store/CartSlice"
 export const Checkout = ({ setCheckout, total }) => {
   const [user, setUser] = useState({});
+  const Navigate=useNavigate();
+  const dispatch=useDispatch();
+  const cartList=useSelector((state)=>state.cart.cartList);
+  // console.log(cartList);
   useEffect(() => {
     const cbid = JSON.parse(sessionStorage.getItem("cbid"));
     const token = JSON.parse(sessionStorage.getItem("token"));
@@ -17,9 +25,33 @@ export const Checkout = ({ setCheckout, total }) => {
     }
     fetchData();
   }, []);
-
-  const handleSubmit=(e)=>{
-    e.prventDefault();
+const orderDetail={
+  cartlist:cartList,
+  amt_payble:total,
+  user:{
+    name:user.name,
+    email:user.email,
+    id:user.id,
+  }
+}
+  function handleSubmit(event){
+    event.prventDefault();
+    async function fetchOrder(){
+      response=await fetch("http://localhost:8000/660/orders/",
+        {
+          method:'POST',
+          headers:{
+            "content-type":"application/json",
+            Authorization:`Bearer ${token}`,
+            body:JSON.stringify(orderDetail),
+          }
+        }
+      );
+      const data=await response.json();
+    }
+    fetchOrder();
+    dispatch(clearCart());
+    Navigate("/");
   }
   return (
     <section>
@@ -58,7 +90,8 @@ export const Checkout = ({ setCheckout, total }) => {
               <h3 className="mb-4 text-xl font-medium text-gray-900 dark:text-white">
                 <i className="bi bi-credit-card mr-2"></i>CARD PAYMENT
               </h3>
-              <form className="space-y-6">
+              <form className="space-y-6"
+              onSubmit={(event)=>handleSubmit(event)}>
                 <div>
                   <label
                     htmlFor="name"
@@ -159,7 +192,6 @@ export const Checkout = ({ setCheckout, total }) => {
                 <button
                   type="submit"
                   className="w-full text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700"
-                  onClick={(event)=>handleSubmit(event)}
                 >
                   <i className="mr-2 bi bi-lock-fill"></i>PAY NOW
                 </button>
