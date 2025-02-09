@@ -16,7 +16,7 @@ export const Checkout = ({ setCheckout, total }) => {
       const response = await fetch(`http://localhost:8000/600/users/${cbid}`, {
         method: "GET",
         headers: {
-          "content-Type": "application/json",
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
@@ -34,25 +34,39 @@ const orderDetail={
     id:user.id,
   }
 }
-  function handleSubmit(event){
-    event.prventDefault();
-    async function fetchOrder(){
-      response=await fetch("http://localhost:8000/660/orders/",
-        {
-          method:'POST',
-          headers:{
-            "content-type":"application/json",
-            Authorization:`Bearer ${token}`,
-            body:JSON.stringify(orderDetail),
-          }
-        }
-      );
-      const data=await response.json();
+function handleSubmit(event) {
+  event.preventDefault(); // Fixed typo
+
+  const token = JSON.parse(sessionStorage.getItem("token")); // Retrieve token inside function
+
+  async function fetchOrder() {
+    try {
+      const response = await fetch("http://localhost:8000/660/orders/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(orderDetail), // Moved body outside headers
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to place order");
+      }
+
+      const data = await response.json();
+      console.log("Order placed successfully:", data);
+      
+      dispatch(clearCart()); // Clear cart after successful order
+      Navigate("/order-summary",{state:{data:data, status :true}}); // Redirect user
+    } catch (error) {
+      Navigate("/order-summary",{state:{status :false}});
     }
-    fetchOrder();
-    dispatch(clearCart());
-    Navigate("/");
   }
+
+  fetchOrder();
+}
+
   return (
     <section>
       <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50"></div>
