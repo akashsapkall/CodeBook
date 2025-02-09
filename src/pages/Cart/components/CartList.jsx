@@ -16,7 +16,7 @@ export const CartList = ({cartList}) => {
       <>
         <section>
           <p className="text-2xl text-center font-semibold dark:text-slate-100 py-10 underline underline-offset-8">
-            My Cart (2)
+            My Cart ({cartList.length})
           </p>
         </section>
         <section>
