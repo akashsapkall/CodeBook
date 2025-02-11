@@ -26,9 +26,7 @@ export const ProductDetail = () => {
     size,
     best_seller,
   } = product;
-  console.log(name);
   const cartList = useSelector((state) => state.cart.cartList);
-  console.log(cartList);
   const [prodAdded, setProdAdded] = useState(false);
   useEffect(() => {
     const isAdded = cartList.find((prod) => prod.id == id);

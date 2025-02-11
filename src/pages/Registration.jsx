@@ -14,9 +14,10 @@ export const Registration = () => {
     };
 
     const data=await register(authDetails);
-    data.accessToken ? Navigate("/products"):toast.error(data);}
+    if(data.accessToken) Navigate("/products");
+  }
     catch(error){
-      toast.error(error.message);
+      error.status==400? toast.error("Invalid Credentials!"):toast.error(error.message||"Not Found");
     }
   }
 

@@ -17,9 +17,9 @@ export const Login = () => {
         password: passRef.current.value,  
       };
       const data=await login(authDetails);
-      data.accessToken ? Navigate("/products") : toast.error(data);
+      if(data.accessToken) Navigate("/products");
     }catch(error){
-      toast.error(error.message);
+      error.status==400? toast.error("Invalid Credentials!"):toast.error(error.message||"Not Found");
     }
   }
   return (

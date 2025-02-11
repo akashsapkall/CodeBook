@@ -22,7 +22,6 @@ export const ProductList = () => {
   },[dispatch,productList]);
   
   const productlist=useSelector((state)=>state.filter.filteredList);
-  console.log(productlist);
   if (loading) {
     return (
       <main>
