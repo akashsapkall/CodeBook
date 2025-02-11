@@ -11,7 +11,7 @@ export const ProductCard = ({ product }) => {
   const { id, best_seller, poster, name, overview, rating, price } = product;
   const dispatch = useDispatch();
   const cartList = useSelector((state) => state.cart.cartList);
-  console.log(cartList);
+  // console.log(cartList);
   const [prodAdded, setProdAdded] = useState(true);
   useEffect(() => {
     const isAdded = cartList.find((prod) => prod.id === id);
