@@ -3,64 +3,33 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch} from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { clearCart } from "../../../store/CartSlice"
+import { createOrder, getUser } from "../../../services/dataService";
+import { toast } from "react-toastify";
 export const Checkout = ({ setCheckout, total }) => {
   const [user, setUser] = useState({});
   const Navigate=useNavigate();
   const dispatch=useDispatch();
   const cartList=useSelector((state)=>state.cart.cartList);
-  // console.log(cartList);
   useEffect(() => {
-    const cbid = JSON.parse(sessionStorage.getItem("cbid"));
-    const token = JSON.parse(sessionStorage.getItem("token"));
-    async function fetchData() {
-      const response = await fetch(`http://localhost:8000/600/users/${cbid}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      setUser(data);
+    async function fetchUser(){
+   try{ const data= await getUser();
+    setUser(data);}catch(error){
+      error.toast(error.message);
     }
-    fetchData();
+    }
+    fetchUser();
   }, []);
-const orderDetail={
-  cartlist:cartList,
-  amt_payble:total,
-  user:{
-    name:user.name,
-    email:user.email,
-    id:user.id,
-  }
-}
+
 function handleSubmit(event) {
-  event.preventDefault(); // Fixed typo
-
-  const token = JSON.parse(sessionStorage.getItem("token")); // Retrieve token inside function
-
+  event.preventDefault(); 
   async function fetchOrder() {
     try {
-      const response = await fetch("http://localhost:8000/660/orders/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(orderDetail), // Moved body outside headers
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to place order");
-      }
-
-      const data = await response.json();
-      console.log("Order placed successfully:", data);
-      
-      dispatch(clearCart()); // Clear cart after successful order
-      Navigate("/order-summary",{state:{data:data, status :true}}); // Redirect user
+      const data=await createOrder(cartList, total, user);
+      dispatch(clearCart());
+      Navigate("/order-summary",{state:{data:data, status :true}});
     } catch (error) {
       Navigate("/order-summary",{state:{status :false}});
+      toast.error(error.message);
     }
   }
 
