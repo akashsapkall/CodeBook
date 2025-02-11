@@ -1,17 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFetch } from "../../hooks/useFetch";
 import { ProductCard } from "../../components";
 import { FilterBar } from "./components/FilterBar";
-import { useSelector } from "react-redux";
-// import { useSearchParams } from "react-router-dom";
-// import { useSearch } from "./components/useSearch";
+import { useSelector, useDispatch } from "react-redux";
+import { useTitle } from "../../hooks/useTitle";
+import { addProductList } from "../../store/FilterpSlice";
+import { useSearchParams } from "react-router-dom";
+
 export const ProductList = () => {
+  const dispatch=useDispatch();
+  useTitle("Products");
+
+  const [ searchparam ]=useSearchParams();
+  const query=searchparam.get("q") || "";
+  const url=query?`products?name_like=${query}`:"products";
+
   const [filterBar, setFilterBar] = useState(false);
+  const { data:productList, loading, error } = useFetch(url);
+  useEffect(()=>{
+    dispatch(addProductList(productList));
+  },[dispatch,productList]);
   
-  let url=useSelector((state)=>state.filter.url);
-
-  const { data:productlist, loading, error } = useFetch(url);
-
+  const productlist=useSelector((state)=>state.filter.filteredList);
+  console.log(productlist);
   if (loading) {
     return (
       <main>

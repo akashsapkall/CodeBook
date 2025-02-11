@@ -3,15 +3,18 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useFetch } from "../hooks/useFetch";
 
+import { useTitle } from "../hooks/useTitle";
 import { RatingCard } from "../components/RatingCard";
 import { addToCart, removeFromCart } from "../store/CartSlice";
 
 
 export const ProductDetail = () => {
+  const dispatch = useDispatch();
   const { id } = useParams();
-
-  const url = `http://localhost:8000/products/${id}`;
+  
+  const url = `products/${id}`;
   const { data: product, loading, error } = useFetch(url);
+  useTitle(product.name);
   const {
     name,
     overview,
@@ -23,23 +26,43 @@ export const ProductDetail = () => {
     size,
     best_seller,
   } = product;
-  const dispatch = useDispatch();
+  console.log(name);
   const cartList = useSelector((state) => state.cart.cartList);
   console.log(cartList);
   const [prodAdded, setProdAdded] = useState(false);
   useEffect(() => {
     const isAdded = cartList.find((prod) => prod.id == id);
-    // console.log(isAdded);
     if (isAdded) {
       setProdAdded(true);
     } else {
       setProdAdded(false);
     }
   }, [cartList]);
-  
+  if (loading) {
+    return (
+      <main>
+        <section className="mb-5">
+          <div className="w-[90vw] p-2 mx-auto">
+            <p>Loading...</p>
+          </div>
+        </section>
+      </main>
+    );
+  }
+  if (error) {
+    return (
+      <main>
+        <section className="mb-5">
+          <div className="w-[90vw] p-2 mx-auto">
+            <p>{error}</p>
+          </div>
+        </section>
+      </main>
+    );
+  }
   return (
     <main>
-      <section>
+      {product && <section>
         <h1 className="pt-10 mb-5 text-4xl text-center font-bold text-gray-900 dark:text-slate-200">
           {name}
         </h1>
@@ -55,16 +78,9 @@ export const ProductDetail = () => {
               <span className="mr-1">$</span>
               <span className="">{price}</span>
             </p>
-            <p className="my-3">
-              {/* <span>
-                    <i className="text-lg bi bi-star-fill text-yellow-500 mr-1"></i>
-                    <i className="text-lg bi bi-star-fill text-yellow-500 mr-1"></i>
-                    <i className="text-lg bi bi-star-fill text-yellow-500 mr-1"></i>
-                    <i className="text-lg bi bi-star-fill text-yellow-500 mr-1"></i>
-                    <i className="text-lg bi bi-star text-yellow-500 mr-1"></i>
-                  </span> */}
+            <div className="my-3">
               <RatingCard rating={rating} />
-            </p>
+            </div>
             <p className="my-4 select-none">
               {best_seller && (
                 <span className="font-semibold text-amber-500 border bg-amber-50 rounded-lg px-3 py-1 mr-2">
@@ -85,8 +101,6 @@ export const ProductDetail = () => {
               </span>
             </p>
             <p className="my-3">
-              {/* <button className={`inline-flex items-center py-2 px-5 text-lg font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800`}>Add To Cart <i className="ml-1 bi bi-plus-lg"></i></button> */}
-              {/* <button className={`inline-flex items-center py-2 px-5 text-lg font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-800`}  disabled={ product.in_stock ? "" : "disabled" }>Remove Item <i className="ml-1 bi bi-trash3"></i></button> */}
               {prodAdded ? (
                 <button
                   className={`inline-flex items-center py-2 px-5 text-lg font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-800`}
@@ -110,7 +124,7 @@ export const ProductDetail = () => {
             </p>
           </div>
         </div>
-      </section>
+      </section>}
     </main>
   );
 };
