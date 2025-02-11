@@ -1,33 +1,26 @@
 // import { json } from 'express';
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { login } from"../services";
 import { toast } from 'react-toastify';
+import { useTitle } from '../hooks/useTitle';
 export const Login = () => {
+  useTitle("Login");
   const Navigate=useNavigate();
   const emailRef=useRef();
   const passRef=useRef();
   async function handleLogin(e) {
-    e.preventDefault(); // Prevent form from refreshing the page
-
-    // Collecting the input values into an object
-    const authDetails = {
-      email: emailRef.current.value,
-      password: passRef.current.value,
-    };
-
-    const response = await fetch("http://localhost:8000/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(authDetails),
-    });
-
-    const data = await response.json();
-    if(data.accessToken){
-      sessionStorage.setItem("token",JSON.stringify(data.accessToken));
-      sessionStorage.setItem("cbid",JSON.stringify(data.user.id));
+    e.preventDefault();
+    try{
+      const authDetails = {
+        email: emailRef.current.value,
+        password: passRef.current.value,  
+      };
+      const data=await login(authDetails);
+      data.accessToken ? Navigate("/products") : toast.error(data);
+    }catch(error){
+      toast.error(error.message);
     }
-    data.accessToken ? Navigate("/products") : toast.error(data);
-    console.log(data);
   }
   return (
     <main>
@@ -76,7 +69,6 @@ export const Login = () => {
             Log In
           </button>
         </form>
-        {/* <button className="mt-3 cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-3 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Login As Guest</button> */}
       </section>
     </main>
   );
