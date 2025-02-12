@@ -60,11 +60,11 @@ export const ProductDetail = () => {
   }
   return (
     <main>
-      {product && <section>
-        <h1 className="pt-10 mb-5 text-4xl text-center font-bold text-gray-900 dark:text-slate-200">
+      {product && <section className="max-w-[92vw] mx-auto ">
+        <h1 className="pt-10 mb-5 text-3xl md:text-4xl text-center font-bold text-gray-900 dark:text-slate-200">
           {name}
         </h1>
-        <p className="mb-5 text-lg text-center text-gray-900 dark:text-slate-200">
+        <p className="mb-5 md:text-lg text-center text-gray-900 dark:text-slate-200">
           {overview}
         </p>
         <div className="flex flex-wrap justify-around">
@@ -72,7 +72,7 @@ export const ProductDetail = () => {
             <img className="rounded" src={poster} alt="" />
           </div>
           <div className="max-w-xl my-3">
-            <p className="text-3xl font-bold text-gray-900 dark:text-slate-200">
+            <p className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-slate-200">
               <span className="mr-1">$</span>
               <span className="">{price}</span>
             </p>
