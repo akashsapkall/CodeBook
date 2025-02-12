@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { getUser, logout } from "../../services";
 import { clearCart } from "../../store/CartSlice";
-import { useEffect, useState } from "react";
+import { useEffect, useState} from "react";
 import { toast } from "react-toastify";
 
 export const ProfileLogin = ({ setProfile }) => {
@@ -30,7 +30,7 @@ export const ProfileLogin = ({ setProfile }) => {
   return (
     <div
       id="dropdownAvatar"
-      className="select-none	absolute top-10 right-0 z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600"
+      className="select-none bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600"
     >
       <div className="py-3 px-4 text-sm text-gray-900 dark:text-white">
         <div className="font-medium truncate">{user.email}</div>

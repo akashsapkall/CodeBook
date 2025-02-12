@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Search } from "./Search";
@@ -7,14 +7,17 @@ import { ProfileLogin } from "./Profile/ProfileLogin";
 import { ProfileLogOut } from "./Profile/ProfileLogOut";
 
 export const Header = () => {
-  const cartList=useSelector((state)=>state.cart.cartList);
+  const cartList = useSelector((state) => state.cart.cartList);
   const { pathname } = useLocation();
   const [darkMode, setDarkMode] = useState(
     JSON.parse(localStorage.getItem("codebook_darkmode")) || false
   );
   const [searchPanel, setSearchPanel] = useState(false);
-  const token=JSON.parse(sessionStorage.getItem("token"));
+  const token = JSON.parse(sessionStorage.getItem("token"));
+
   const [profile, setProfile] = useState(false);
+  const dropdownRef = useRef(null);
+  const profileRef = useRef(null);
   useEffect(() => {
     setSearchPanel(false);
   }, [pathname]);
@@ -26,6 +29,24 @@ export const Header = () => {
       document.documentElement.classList.remove("dark");
     }
   }, [darkMode]);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        profileRef.current &&
+        !profileRef.current.contains(event.target)
+      ) {
+        setProfile(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <header>
       <nav
@@ -71,13 +92,23 @@ export const Header = () => {
               </span>
             </Link>
             <span
+              ref={profileRef}
               className="cursor-pointer text-xl  text-gray-700 dark:text-white"
               onClick={() => setProfile(!profile)}
             >
               <i className="bi bi-person-circle"></i>
             </span>
             {profile && (
-              token?<ProfileLogin setProfile={setProfile} />:<ProfileLogOut setProfile={setProfile} />
+              <div
+                ref={dropdownRef}
+                className="absolute top-10 right-0 z-10 w-44"
+              >
+                {token ? (
+                  <ProfileLogin setProfile={setProfile} />
+                ) : (
+                  <ProfileLogOut setProfile={setProfile} />
+                )}
+              </div>
             )}
           </div>
         </div>
