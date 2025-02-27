@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 export const EmptyCart = () => {
   return (
     <section className="text-xl text-center max-w-4xl mx-auto py-1 dark:text-slate-100 ">
-      <div className="my-10 border dark:border-slate-700 rounded pb-8">
+      <div className="my-10 md:border dark:border-slate-700 rounded pb-8">
         <div className="py-10">
           <p className="bi bi-cart text-green-600 text-7xl mb-5"></p>
           <p>Oops! Your cart looks empty!</p>

@@ -1,13 +1,9 @@
-// import { useNavigate } from"react-router-dom";
-// import { useFetch } from "../../../hooks/useFetch";
-// import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { isBestSellerOnly, inStockOnly, priceSort, ratingSort, clearAll } from "../../../store/FilterSlice";
+import { addBestSeller, addPriceSort, addRatingSort, addInStock, clearFilter } from "../../../store/FilterpSlice";
 export const FilterBar = ({ makeFilterBarClose }) => {
   const dispatch =useDispatch();
-  // const inStock=useSelector((state)=>state.filter.inStock);
-  // const bestSeller=useSelector((state)=>state.filter.bestSeller);
   const state=useSelector((state)=>state.filter);
+
   return (
     <section className="filter">
       <div
@@ -58,8 +54,8 @@ export const FilterBar = ({ makeFilterBarClose }) => {
                   value=""
                   name="price-sort"
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600"
-                  onChange={()=>dispatch(priceSort("lowtohigh"))}
-                  checked={state.sortbyPrice==="lowtohigh"}
+                  onChange={()=>dispatch(addPriceSort("lowtohigh"))}
+                  checked={state.pricesort==="lowtohigh"}
                 />
                 <label
                   htmlFor="price-sort-1"
@@ -75,8 +71,8 @@ export const FilterBar = ({ makeFilterBarClose }) => {
                   value=""
                   name="price-sort"
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600"
-                  onChange={()=>dispatch(priceSort("hightolow"))}
-                  checked={state.sortbyPrice==="hightolow"}
+                  onChange={()=>dispatch(addPriceSort("hightolow"))}
+                  checked={state.pricesort==="hightolow"}
                 />
                 <label
                   htmlFor="price-sort-2"
@@ -95,8 +91,8 @@ export const FilterBar = ({ makeFilterBarClose }) => {
                   value=""
                   name="rating-sort"
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600"
-                  onChange={()=>dispatch(ratingSort("FourAndAbove"))}
-                  checked={state.sortByRating==="FourAndAbove"}
+                  onChange={()=>dispatch(addRatingSort("above4"))}
+                  checked={state.ratingsort==="above4"}
                 />
                 <label
                   htmlFor="rating-sort-1"
@@ -112,8 +108,8 @@ export const FilterBar = ({ makeFilterBarClose }) => {
                   value=""
                   name="rating-sort"
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600"
-                  onChange={()=>dispatch(ratingSort("ThreeAndAbove"))}
-                  checked={state.sortByRating==="ThreeAndAbove"}
+                  onChange={()=>dispatch(addRatingSort("above3"))}
+                  checked={state.ratingsort==="above3"}
                 />
                 <label
                   htmlFor="rating-sort-2"
@@ -129,8 +125,8 @@ export const FilterBar = ({ makeFilterBarClose }) => {
                   value=""
                   name="rating-sort"
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600"
-                  onChange={()=>dispatch(ratingSort("TwoAndAbove"))}
-                  checked={state.sortByRating==="TwoAndAbove"}
+                  onChange={()=>dispatch(addRatingSort("above2"))}
+                  checked={state.ratingsort==="above2"}
                 />
                 <label
                   htmlFor="rating-sort-3"
@@ -146,8 +142,8 @@ export const FilterBar = ({ makeFilterBarClose }) => {
                   value=""
                   name="rating-sort"
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600"
-                  onChange={()=>dispatch(ratingSort("OneAndAbove"))}
-                  checked={state.sortByRating==="OneAndAbove"}
+                  onChange={()=>dispatch(addRatingSort("above1"))}
+                  checked={state.ratingsort==="above1"}
                 />
                 <label
                   htmlFor="rating-sort-4"
@@ -165,8 +161,8 @@ export const FilterBar = ({ makeFilterBarClose }) => {
                   type="checkbox"
                   value=""
                   className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600"
-                  onChange={()=>dispatch(isBestSellerOnly(!state.bestSeller))}
-                  checked={state.bestSeller||false}
+                  onChange={()=>dispatch(addBestSeller(!state.bestseller))}
+                  checked={state.bestseller||false}
                 />
                 <label
                   htmlFor="best-seller"
@@ -181,8 +177,8 @@ export const FilterBar = ({ makeFilterBarClose }) => {
                   type="checkbox"
                   value=""
                   className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600"
-                  onChange={()=>dispatch(inStockOnly(!state.inStock))}
-                  checked={state.inStock||false}
+                  onChange={()=>dispatch(addInStock(!state.instock))}
+                  checked={state.instock||false}
                 />
                 <label
                   htmlFor="only-instock"
@@ -196,7 +192,7 @@ export const FilterBar = ({ makeFilterBarClose }) => {
               <button
                 type="button"
                 className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-10 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                onClick={()=>dispatch(clearAll())}
+                onClick={()=>dispatch(clearFilter())}
               >
                 Clear Filter
               </button>

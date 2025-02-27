@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 import pageNotFound from "../assets/404error.png";
-// import { useTitle } from '../hooks/useTitle';
+import { useTitle } from '../hooks/useTitle';
 export const PageNotFound = () => {
-//   useTitle("Page Not Found");
+  useTitle("Page Not Found");
   return (
     <main>
       <div className="py-36 md:py-24">

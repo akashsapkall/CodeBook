@@ -1,19 +1,23 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Search } from "./Search";
 import logo from "../assets/images/4.png";
 import { ProfileLogin } from "./Profile/ProfileLogin";
 import { ProfileLogOut } from "./Profile/ProfileLogOut";
+
 export const Header = () => {
-  const cartList=useSelector((state)=>state.cart.cartList);
+  const cartList = useSelector((state) => state.cart.cartList);
   const { pathname } = useLocation();
   const [darkMode, setDarkMode] = useState(
     JSON.parse(localStorage.getItem("codebook_darkmode")) || false
   );
   const [searchPanel, setSearchPanel] = useState(false);
-  const token=JSON.parse(sessionStorage.getItem("token"));
+  const token = JSON.parse(sessionStorage.getItem("token"));
+
   const [profile, setProfile] = useState(false);
+  const dropdownRef = useRef(null);
+  const profileRef = useRef(null);
   useEffect(() => {
     setSearchPanel(false);
   }, [pathname]);
@@ -25,6 +29,24 @@ export const Header = () => {
       document.documentElement.classList.remove("dark");
     }
   }, [darkMode]);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        profileRef.current &&
+        !profileRef.current.contains(event.target)
+      ) {
+        setProfile(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <header>
       <nav
@@ -37,14 +59,14 @@ export const Header = () => {
         <div className="w-[90vw] flex flex-wrap justify-between items-center mx-auto py-4 relative">
           <Link
             to="/"
-            className="flex items-center space-x-3 rtl:space-x-reverse"
+            className="flex items-center space-x-1 md:space-x-3 rtl:space-x-reverse"
           >
             <img src={logo} className="h-8" alt="Logo" />
             <span className="self-center text-2xl font-semibold text-gray-700 whitespace-nowrap dark:text-white">
               CodeBook
             </span>
           </Link>
-          <div className="w-[150px] flex justify-between items-center">
+          <div className="w-[130px] md:w-[150px] flex justify-between items-center">
             <span
               className="cursor-pointer text-xl text-gray-700 dark:text-white "
               onClick={() => setDarkMode(!darkMode)}
@@ -70,13 +92,23 @@ export const Header = () => {
               </span>
             </Link>
             <span
+              ref={profileRef}
               className="cursor-pointer text-xl  text-gray-700 dark:text-white"
               onClick={() => setProfile(!profile)}
             >
               <i className="bi bi-person-circle"></i>
             </span>
             {profile && (
-              token?<ProfileLogin setProfile={setProfile} />:<ProfileLogOut setProfile={setProfile} />
+              <div
+                ref={dropdownRef}
+                className="absolute top-10 right-0 z-10 w-44"
+              >
+                {token ? (
+                  <ProfileLogin setProfile={setProfile} />
+                ) : (
+                  <ProfileLogOut setProfile={setProfile} />
+                )}
+              </div>
             )}
           </div>
         </div>
