@@ -1,17 +1,45 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useFetch } from "../../hooks/useFetch";
 import { ProductCard } from "../../components";
 import { FilterBar } from "./components/FilterBar";
-import { useSelector } from "react-redux";
-// import { useSearchParams } from "react-router-dom";
-// import { useSearch } from "./components/useSearch";
+import { useSelector, useDispatch } from "react-redux";
+import { useTitle } from "../../hooks/useTitle";
+import { addProductList } from "../../store/FilterpSlice";
+import { useSearchParams } from "react-router-dom";
+
 export const ProductList = () => {
+  const dispatch=useDispatch();
+  useTitle("Products");
+
+  const [ searchparam ]=useSearchParams();
+  const query=searchparam.get("q") || "";
+  const url=query?`products?name_like=${query}`:"products";
+
   const [filterBar, setFilterBar] = useState(false);
-  
-  let url=useSelector((state)=>state.filter.url);
+  const { data:productList, loading, error } = useFetch(url);
+  useEffect(()=>{
+    dispatch(addProductList(productList));
+  },[dispatch,productList]);
+  const filterRef=useRef(null);
+  const toggelerRef=useRef(null);
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        filterRef.current &&
+        !filterRef.current.contains(event.target) &&
+        toggelerRef.current &&
+        !toggelerRef.current.contains(event.target)
+      ) {
+        setFilterBar(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
-  const { data:productlist, loading, error } = useFetch(url);
-
+  const productlist=useSelector((state)=>state.filter.filteredList);
   if (loading) {
     return (
       <main>
@@ -43,6 +71,7 @@ export const ProductList = () => {
           </span>
           <span>
             <button
+            ref={toggelerRef}
               id="dropdownMenuIconButton"
               data-dropdown-toggle="dropdownDots"
               className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-gray-100 rounded-lg hover:bg-gray-200 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-700"
@@ -62,11 +91,14 @@ export const ProductList = () => {
           </span>
         </div>
         {filterBar && (
-          <FilterBar
+          <div 
+          ref={filterRef}>
+            <FilterBar
             makeFilterBarClose={(y) => {
               setFilterBar(y);
             }}
           />
+          </div>
         )}
         <div className="flex flex-wrap justify-center lg:flex-row">
           {productlist &&
